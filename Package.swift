@@ -13,9 +13,9 @@ let package = Package(
         .library(name: "SVGAPlayer", targets: ["SVGAPlayer"])
     ],
     dependencies: [
-        // ZipArchive 2.5.5+ 要求 iOS 15.5; 锁到 2.5.0..<2.5.5 以保持 iOS 13 兼容
-        // (CocoaPods 路径用的 SSZipArchive 2.4.3, API 兼容)
-        .package(url: "https://github.com/ZipArchive/ZipArchive.git", "2.5.0"..<"2.5.5")
+        // ZipArchive 2.5.x 整段需要 iOS 15.5; 锁到 2.4.x 保 iOS 13
+        // (CocoaPods 路径用的也是 SSZipArchive 2.4.3, API 兼容)
+        .package(url: "https://github.com/ZipArchive/ZipArchive.git", "2.4.0"..<"2.5.0")
     ],
     targets: [
         .target(
