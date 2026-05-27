@@ -8,6 +8,22 @@
 
 #import <UIKit/UIKit.h>
 
+// SPM 把 SVGAPlayer.h 当 umbrella header (因为同名), 这里 re-export 所有 public header
+// 让 `@import SVGAPlayer;` / `#import "SVGAPlayer.h"` 一并暴露 SVGAParser 等类
+#import "SVGA.h"
+#import "SVGAAudioEntity.h"
+#import "SVGAAudioLayer.h"
+#import "SVGABezierPath.h"
+#import "SVGABitmapLayer.h"
+#import "SVGAContentLayer.h"
+#import "SVGAExporter.h"
+#import "SVGAImageView.h"
+#import "SVGAParser.h"
+#import "SVGAVectorLayer.h"
+#import "SVGAVideoEntity.h"
+#import "SVGAVideoSpriteEntity.h"
+#import "SVGAVideoSpriteFrameEntity.h"
+
 @class SVGAVideoEntity, SVGAPlayer;
 
 @protocol SVGAPlayerDelegate <NSObject>
