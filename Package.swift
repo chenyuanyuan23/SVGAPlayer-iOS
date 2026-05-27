@@ -18,25 +18,32 @@ let package = Package(
         .package(url: "https://github.com/ZipArchive/ZipArchive.git", "2.4.0"..<"2.5.0")
     ],
     targets: [
+        // 拆成 2 个 target:
+        // - SVGAPlayerProto: protoc 生成代码 (Svga.pbobjc) + Google protobuf OC runtime, MRC (-fno-objc-arc)
+        //   Google 的 OC protobuf 运行时是 MRC 实现, 必须独立目标关掉 ARC
+        // - SVGAPlayer: 上层 ARC 业务代码, 依赖 SVGAPlayerProto + ZipArchive
         .target(
-            name: "SVGAPlayer",
-            dependencies: [
-                .product(name: "ZipArchive", package: "ZipArchive")
-            ],
-            path: "Source",
-            // 注意:
-            // - SVGA*.h 已移到 Source/include/ (公共 API)
-            // - pbobjc/ 是 protoc 生成代码 (Svga.pbobjc.h/m), 仅 SVGAPlayer 内部用
-            // - protobuf-runtime/ 是 Google protobuf OC runtime (76 个文件) inline 进来
-            //   - 因为 Google 没提供 SPM 支持, 又是 BSD-3 自由 redistribute
-            //   - 版本: v27.5
+            name: "SVGAPlayerProto",
+            path: "Source/SVGAPlayerProto",
             publicHeadersPath: "include",
             cSettings: [
                 .headerSearchPath("pbobjc"),
                 .headerSearchPath("protobuf-runtime"),
-                // 关闭 Google protobuf runtime 的一些 strict warning
-                .unsafeFlags(["-Wno-deprecated-declarations", "-Wno-unused-function"])
+                .unsafeFlags([
+                    "-fno-objc-arc",
+                    "-Wno-deprecated-declarations",
+                    "-Wno-unused-function",
+                ])
             ]
+        ),
+        .target(
+            name: "SVGAPlayer",
+            dependencies: [
+                .target(name: "SVGAPlayerProto"),
+                .product(name: "ZipArchive", package: "ZipArchive"),
+            ],
+            path: "Source/SVGAPlayer",
+            publicHeadersPath: "include"
         )
     ]
 )
