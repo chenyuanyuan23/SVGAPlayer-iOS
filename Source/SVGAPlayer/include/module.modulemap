@@ -1,0 +1,4 @@
+module SVGAPlayer {
+    umbrella "."
+    export *
+}
