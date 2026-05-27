@@ -25,6 +25,13 @@ let package = Package(
         .target(
             name: "SVGAPlayerProto",
             path: "Source/SVGAPlayerProto",
+            // GPBProtocolBuffers.m 是 umbrella source — 把所有 GPB*.m + GPB*.pbobjc.m
+            // 都 #import 进来 (用法见 Google 文档 "若不加 dependency 可只编这个一个文件"),
+            // SPM 单文件编译时如果同时编 umbrella .m 又编子 .m 会出 duplicate symbol 612 处.
+            // 排除掉 umbrella, 让 SPM 单文件路径成为唯一来源.
+            exclude: [
+                "protobuf-runtime/GPBProtocolBuffers.m",
+            ],
             publicHeadersPath: "include",
             cSettings: [
                 .headerSearchPath("pbobjc"),
